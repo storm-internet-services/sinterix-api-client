@@ -1,0 +1,19 @@
+{
+    "name": "storm-internet-services/sinterix-client",
+    "description": "API client for Sinterix IPTV",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sinterix\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matthew April"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
