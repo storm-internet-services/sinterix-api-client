@@ -1,5 +1,5 @@
 {
-    "name": "storm-internet-services/sinterix-client",
+    "name": "storm-internet-services/sinterix-api-client",
     "description": "API client for Sinterix IPTV",
     "version": "1.0.0",
     "type": "library",
