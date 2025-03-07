@@ -1,6 +1,6 @@
 <?php
 
-namespace Sinterix;
+namespace Sinterix\Exceptions;
 
 class ValidationError extends RequestError
 {

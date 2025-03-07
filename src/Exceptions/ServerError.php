@@ -1,5 +1,5 @@
 <?php
 
-namespace Sinterix;
+namespace Sinterix\Exceptions;
 
 class ServerError extends \Exception {}

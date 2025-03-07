@@ -29,18 +29,6 @@ class ApiClient {
         return $this->getCustomerInfo($refId, true);
     }
 
-    /**
-    Params:
-    action (Required) = get_package_channels
-    $token = (Required) Token response from token call
-    $cid = (Required) Customer Id
-    $package_id = (Required) Customer Id
-    $addon_ids = (Optional) Pass comma separated addon ids including standalone,Pick pay,Themepack
-    $pick_pay_channels[channels] = (Required if you pass pickpay ID in addon )Pass comma separated channels
-    $pick_pay_channels[themepack] = (Optional)Pass comma separated theme pack IDs for the pIckpay addon.
-    $standalone_channels = (Required) Pass comma separated Standalone channels if you pass standalone Id in Addon(s).
-     */
-
     public function updateCustomerPackage(
         int $cid,
         int $packageId,
@@ -48,7 +36,17 @@ class ApiClient {
         array $pickPayChannelIds=[],
         array $standaloneChannelIds=[]
     ): void {
-
+        /**
+        Params:
+        action (Required) = get_package_channels
+        $token = (Required) Token response from token call
+        $cid = (Required) Customer Id
+        $package_id = (Required) Customer Id
+        $addon_ids = (Optional) Pass comma separated addon ids including standalone,Pick pay,Themepack
+        $pick_pay_channels[channels] = (Required if you pass pickpay ID in addon )Pass comma separated channels
+        $pick_pay_channels[themepack] = (Optional)Pass comma separated theme pack IDs for the pIckpay addon.
+        $standalone_channels = (Required) Pass comma separated Standalone channels if you pass standalone Id in Addon(s).
+         */
     }
 
     /**
@@ -102,7 +100,7 @@ class ApiClient {
         if($httpStatus < 200 || $httpStatus >= 300) {
 
             if ($httpStatus >= 500) {
-                throw new ServerError('', $httpStatus);
+                throw new Exceptions\ServerError('', $httpStatus);
 
             } else if ($httpStatus === 403) {
                 throw new \Exception('Request denied: make sure you are using a white-listed IP address');
@@ -120,7 +118,7 @@ class ApiClient {
                 # string = general request error
                 # array = input validation errors
                 if (is_array($decodedResponse['msg'])) {
-                    throw new ValidationError($decodedResponse['msg']);
+                    throw new Exceptions\ValidationError($decodedResponse['msg']);
 
                 } else {
                     # If token is invalid, refresh and retry
@@ -131,12 +129,12 @@ class ApiClient {
                         }
                     }
 
-                    throw new RequestError($decodedResponse['msg']);
+                    throw new Exceptions\RequestError($decodedResponse['msg']);
                 }
 
             } else {
                 # this should never happen, but we'll treat it as a server error if it does.
-                throw new ServerError('Unknown Error');
+                throw new Exceptions\ServerError('Unknown Error');
             }
         }
 
