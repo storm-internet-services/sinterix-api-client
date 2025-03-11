@@ -22,6 +22,7 @@ class ApiClient {
     public function getCustomerInfo(mixed $id, bool $useReferenceId=false): array {
         return $this->makeRequest('GET', 'get_cid_info', [$useReferenceId ? 'reference_id' : 'cid' => $id]);
     }
+
     /**
      * Get customer information by reference_id
      */
@@ -29,6 +30,26 @@ class ApiClient {
         return $this->getCustomerInfo($refId, true);
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getAllPackages(): array {
+        return $this->makeRequest('GET', 'get_agent_packages_addons');
+    }
+
+    /**
+     * @param int $packageId
+     * @return array
+     * @throws Exception
+     */
+    public function getPackageChannels(int $packageId): array {
+        return $this->makeRequest('GET', 'get_package_channels', ['package_id' => $packageId]);
+    }
+
+    /**
+     * TODO
+     */
     public function updateCustomerPackage(
         int $cid,
         int $packageId,
