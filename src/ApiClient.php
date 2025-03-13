@@ -150,7 +150,7 @@ class ApiClient {
 
                 } else {
                     # If token is invalid, refresh and retry
-                    if ($requiresToken && str_contains(strtolower($decodedResponse['msg']), 'invalid token')) {
+                    if ($requiresToken && str_contains(strtolower($decodedResponse['msg']), 'token')) {
                         if ($retryCount > 0) {
                             $this->token = $this->fetchNewToken();
                             return $this->makeRequest($method, $action, $params, true, $retryCount - 1);
