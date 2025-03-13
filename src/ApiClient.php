@@ -3,6 +3,7 @@
 namespace Sinterix;
 
 use Exception;
+use Sinterix\Exceptions\RequestError;
 
 class ApiClient {
 
@@ -48,26 +49,32 @@ class ApiClient {
     }
 
     /**
-     * TODO
+     * Set the customer packages exactly as defined.
+     * Currently packages will be replaced by whatever is provided here.
      */
-    public function updateCustomerPackage(
+    public function setCustomerPackage(
         int $cid,
         int $packageId,
         array $addOnsIds=[],
         array $pickPayChannelIds=[],
         array $standaloneChannelIds=[]
     ): void {
-        /**
-        Params:
-        action (Required) = get_package_channels
-        $token = (Required) Token response from token call
-        $cid = (Required) Customer Id
-        $package_id = (Required) Customer Id
-        $addon_ids = (Optional) Pass comma separated addon ids including standalone,Pick pay,Themepack
-        $pick_pay_channels[channels] = (Required if you pass pickpay ID in addon )Pass comma separated channels
-        $pick_pay_channels[themepack] = (Optional)Pass comma separated theme pack IDs for the pIckpay addon.
-        $standalone_channels = (Required) Pass comma separated Standalone channels if you pass standalone Id in Addon(s).
-         */
+
+        $params = [
+            'cid' => $cid,
+            'package_id' => $packageId
+        ];
+
+        if(count($addOnsIds) > 0) {
+            $params['addon_ids'] = implode(',', $addOnsIds);
+            # these will only be processed if a pick-pack or standalone add-on is set in 'addon_ids'
+            $params['pick_pay_channels[channels]'] = implode(',', $pickPayChannelIds);
+            $params['standalone_channels'] = implode(',', $standaloneChannelIds);
+        }
+
+        # GET request.. actually behaves as a PUT request.
+        # API does not return anything meaningful either.
+        $this->makeRequest('GET', 'manage_package_channels', $params);
     }
 
     /**
