@@ -3,9 +3,14 @@
 namespace Sinterix;
 
 use Exception;
-use Sinterix\Exceptions\RequestError;
 
 class ApiClient {
+
+    /**
+     * Token lifetime in seconds
+     * 10 minutes, less 5 second buffer.
+     */
+    public const TOKEN_TTL = 595;
 
     private ?string $token = null;
 
@@ -195,10 +200,7 @@ class ApiClient {
         ], false); # Skip token injection
 
         if ($response['status'] === true && isset($response['token'])) {
-            // TODO: not sure how long before tokens expire, but it's definitely not 1 min
-            // might be 1 minute of inactivity?
-            $expires = time() + 55; // Token expires in 60s, refresh a bit earlier
-            $this->tokenStorage->storeToken($response['token'], $expires);
+            $this->tokenStorage->storeToken($response['token'], self::TOKEN_TTL);
             return $response['token'];
         }
 
