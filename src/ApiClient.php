@@ -3,6 +3,7 @@
 namespace Sinterix;
 
 use Exception;
+use Sinterix\Exceptions\RequestError;
 
 class ApiClient {
 
@@ -50,7 +51,14 @@ class ApiClient {
      * @throws Exception
      */
     public function getPackageChannels(int $packageId): array {
-        return $this->makeRequest('GET', 'get_package_channels', ['package_id' => $packageId]);
+        $result = $this->makeRequest('GET', 'get_package_channels', ['package_id' => $packageId]);
+        # this endpoint returns some nonsensical json with a bunch of empty strings when the resource is not found.
+        # lets try to turn that into a reasonable result by checking for the presence of an id.
+        if(empty($result['id'])) {
+            throw new RequestError('Package not found');
+        }
+
+        return $result;
     }
 
     /**
