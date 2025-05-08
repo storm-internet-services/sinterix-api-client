@@ -23,11 +23,25 @@ class ApiClient {
         private TokenStorageInterface $tokenStorage
     ) {}
 
+
+    /**
+     * List all customer ids (cids and reference ids)
+     */
+    public function getAllCustomerIds(bool $includeTerminated=false): array {
+        $params = [];
+        if($includeTerminated) {
+            # does not appear to do anything, but it's in the docs.
+            $params['deleted'] = 'yes';
+        }
+
+        return $this->makeRequest('GET', 'get_customer_list', $params);
+    }
+
     /**
      * Get customer information
      */
     public function getCustomerInfo(mixed $id, bool $useReferenceId=false): array {
-        return $this->makeRequest('GET', 'get_cid_info', [$useReferenceId ? 'reference_id' : 'cid' => $id]);
+        return $this->makeRequest('GET', 'get_cid_info', [($useReferenceId ? 'reference_id' : 'cid') => $id]);
     }
 
     /**
